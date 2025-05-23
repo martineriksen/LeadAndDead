@@ -1,30 +1,25 @@
-local scene = require 'libraries.scene'
-local playerModule = require 'entities.player'
-local sti = require 'libraries.sti'
+local player = require 'entities.player'
+local map = require 'systems.map'
+local cam = require 'systems.camera'
 
 local game = {}
 
-local rootLayer, player, gameMap
-
 function game.load()
-    rootLayer = scene.newLayer()
-    gameMap = sti('maps/testMap.lua')
-    local playerImage = love.graphics.newImage('sprites/cowboy1.png')
-    local scale = gameMap.tilewidth / playerImage:getWidth()
-    player = playerModule.new(400, 200, playerImage, scale)
-    rootLayer:insertChild(player)
+    map.load()
+    player.load(map)
+    cam.load(player, map)
 end
 
 function game.update(dt)
-    player:update(dt)
+    player.update(dt)
+    cam.update()
 end
 
 function game.draw()
-    if gameMap then
-        gameMap:drawLayer(gameMap.layers["Ground"])
-        gameMap:drawLayer(gameMap.layers["Trees"])
-    end
-    rootLayer:draw()
+    cam.attach()
+    map.draw()
+    player.draw()
+    cam.detach()
 end
 
 return game

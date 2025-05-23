@@ -11,7 +11,3 @@ end
 function love.draw()
     game.draw()
 end
-
-function love.keypressed(key)
-    if game.keypressed then game.keypressed(key) end
-end
